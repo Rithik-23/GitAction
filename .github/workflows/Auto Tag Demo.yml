@@ -3,7 +3,7 @@ name: Auto Tag on Commit
 on:
   push:
     branches:
-      - azure-prod
+      - azure
       - aws
       - beta
       - dev
@@ -61,7 +61,7 @@ jobs:
           echo "Current Branch: $BRANCH_NAME"
 
           # Add environment-specific suffix
-          if [[ "$BRANCH_NAME" == "azure-prod" ]]; then
+          if [[ "$BRANCH_NAME" == "azure" ]]; then
               NEW_TAG="${NEW_TAG}-staging"
           elif [[ "$BRANCH_NAME" == "aws" ]]; then
               NEW_TAG="$NEW_TAG"
