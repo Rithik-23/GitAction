@@ -66,7 +66,15 @@ jobs:
           elif [[ "$BRANCH_NAME" == "aws" ]]; then
               NEW_TAG="$NEW_TAG"
           elif [[ "$BRANCH_NAME" == "beta" ]]; then
-              NEW_TAG="${NEW_TAG}.rc.0"
+              # Check for existing beta tags and increment the rc version
+              LATEST_BETA_TAG=$(git tag --sort=-v:refname | grep -E "^v${MAJOR}\.${MINOR}\.${PATCH}\.rc\.[0-9]+$" | head -n 1 || echo "")
+              if [[ -n "$LATEST_BETA_TAG" ]]; then
+                  RC_VERSION=$(echo "$LATEST_BETA_TAG" | grep -oE "\.rc\.[0-9]+$" | cut -d. -f3)
+                  RC_VERSION=$((RC_VERSION + 1))
+              else
+                  RC_VERSION=0
+              fi
+              NEW_TAG="${NEW_TAG}.rc.${RC_VERSION}"
           elif [[ "$BRANCH_NAME" == "dev" ]]; then
               NEW_TAG="${NEW_TAG}-dev"
           else
